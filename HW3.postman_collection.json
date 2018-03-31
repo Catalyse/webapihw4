@@ -1,0 +1,703 @@
+{
+	"info": {
+		"name": "HW3",
+		"_postman_id": "660f2d7b-976e-26b0-a064-4d0e0bd8612b",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "AddMovie",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "jwt",
+						"value": "{{session}}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "actors[0][actorname]",
+							"value": "test1",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[0][charactername]",
+							"value": "test1char",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[1][actorname]",
+							"value": "test2",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[1][charactername]",
+							"value": "test2char",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[2][actorname]",
+							"value": "test3",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[2][charactername]",
+							"value": "test3char",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "title",
+							"value": "Stephen Hawking: The life of a great man",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "releaseyear",
+							"value": "2030",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "genre",
+							"value": "Adventure",
+							"type": "text",
+							"description": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "https://taylormayhw3.herokuapp.com/movies",
+					"protocol": "https",
+					"host": [
+						"taylormayhw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AddMovie No Token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "jwt",
+						"value": "{{session}}",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "actors[0][actorname]",
+							"value": "test1",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[0][charactername]",
+							"value": "test1char",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[1][actorname]",
+							"value": "test2",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[1][charactername]",
+							"value": "test2char",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[2][actorname]",
+							"value": "test3",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[2][charactername]",
+							"value": "test3char",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "title",
+							"value": "Stephen Hawking: The life of a great man",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "releaseyear",
+							"value": "2030",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "genre",
+							"value": "Adventure",
+							"type": "text",
+							"description": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "https://taylormayhw3.herokuapp.com/movies",
+					"protocol": "https",
+					"host": [
+						"taylormayhw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Movie",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d5ad38d7-b641-456d-bc80-a37764152f22",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "jwt",
+						"value": "{{session}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://taylormayhw3.herokuapp.com/movies/5aa9c14f0c24426aca526a60",
+					"protocol": "https",
+					"host": [
+						"taylormayhw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies",
+						"5aa9c14f0c24426aca526a60"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Movie No Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d5ad38d7-b641-456d-bc80-a37764152f22",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "jwt",
+						"value": "{{session}}",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://taylormayhw3.herokuapp.com/movies/5aa9c14f0c24426aca526a60",
+					"protocol": "https",
+					"host": [
+						"taylormayhw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies",
+						"5aa9c14f0c24426aca526a60"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Movies",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "jwt",
+						"value": "{{session}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://taylormayhw3.herokuapp.com/movies/all",
+					"protocol": "https",
+					"host": [
+						"taylormayhw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies",
+						"all"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Movies No Token",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "jwt",
+						"value": "{{session}}",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://taylormayhw3.herokuapp.com/movies/all",
+					"protocol": "https",
+					"host": [
+						"taylormayhw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies",
+						"all"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Movie",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "jwt",
+							"value": "{{session}}",
+							"type": "text",
+							"description": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "https://taylormayhw3.herokuapp.com/movies/5aa9c14f0c24426aca526a60",
+					"protocol": "https",
+					"host": [
+						"taylormayhw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies",
+						"5aa9c14f0c24426aca526a60"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Movie No Token",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "jwt",
+							"value": "{{session}}",
+							"type": "text",
+							"description": "",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://taylormayhw3.herokuapp.com/movies/5aa9c14f0c24426aca526a60",
+					"protocol": "https",
+					"host": [
+						"taylormayhw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies",
+						"5aa9c14f0c24426aca526a60"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Movie",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "jwt",
+						"value": "{{session}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "actors[0][actorname]",
+							"value": "testupdate1",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[0][charactername]",
+							"value": "test1char",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[1][actorname]",
+							"value": "testupdate2",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[1][charactername]",
+							"value": "test2char",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[2][actorname]",
+							"value": "testupdate23",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[2][charactername]",
+							"value": "test3char",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "title",
+							"value": "Stephen Hawking: The life of a great man 2",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "releaseyear",
+							"value": "2035",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "genre",
+							"value": "Adventure",
+							"type": "text",
+							"description": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "https://taylormayhw3.herokuapp.com/movies/5aa9c14f0c24426aca526a60",
+					"protocol": "https",
+					"host": [
+						"taylormayhw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies",
+						"5aa9c14f0c24426aca526a60"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Movie No Token",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "jwt",
+						"value": "{{session}}",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "actors[0][actorname]",
+							"value": "testupdate1",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[0][charactername]",
+							"value": "test1char",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[1][actorname]",
+							"value": "testupdate2",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[1][charactername]",
+							"value": "test2char",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[2][actorname]",
+							"value": "testupdate23",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "actors[2][charactername]",
+							"value": "test3char",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "title",
+							"value": "Stephen Hawking: The life of a great man 2",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "releaseyear",
+							"value": "2035",
+							"type": "text",
+							"description": ""
+						},
+						{
+							"key": "genre",
+							"value": "Adventure",
+							"type": "text",
+							"description": ""
+						}
+					]
+				},
+				"url": {
+					"raw": "https://taylormayhw3.herokuapp.com/movies/5aa9c14f0c24426aca526a60",
+					"protocol": "https",
+					"host": [
+						"taylormayhw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies",
+						"5aa9c14f0c24426aca526a60"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "catalyse",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "asdf",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "taylor",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://taylormayhw3.herokuapp.com/register",
+					"protocol": "https",
+					"host": [
+						"taylormayhw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"register"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "481419fd-ef1f-47f3-90bb-1f547a817a76",
+						"type": "text/javascript",
+						"exec": [
+							"var response = JSON.parse(pm.response.text());",
+							"var token = response.token.split(' ')[1];",
+							"",
+							"pm.environment.set('session', token);",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "catalyse",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "asdf",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://taylormayhw3.herokuapp.com/login",
+					"protocol": "https",
+					"host": [
+						"taylormayhw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"login"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
