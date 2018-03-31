@@ -6,7 +6,7 @@ var jwt = require('jsonwebtoken');
 var dotenv = require('dotenv').config();
 
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://catalyse:password123@ds215019.mlab.com:15019/hw4");
+mongoose.connect("mongodb://catalyse:password123@ds231199.mlab.com:31199/hw4");
 
 var userSchema = new mongoose.Schema({
   username: String,
