@@ -6,7 +6,7 @@ var jwt = require('jsonwebtoken');
 var dotenv = require('dotenv').config();
 
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://catalyse:password123@ds215019.mlab.com:15019/hw3");
+mongoose.connect("mongodb://catalyse:password123@ds215019.mlab.com:15019/hw4");
 
 var userSchema = new mongoose.Schema({
   username: String,
@@ -49,8 +49,14 @@ var movieSchema = new mongoose.Schema({
   }
 });
 
+var reviewSchema = new mongoose.Schema({
+  movie: String,
+  review: String
+});
+
 var user = mongoose.model('user', userSchema);
 var movie = mongoose.model('movie', movieSchema);
+var review = mongoose.model('review', reviewSchema);
 
 router.post('/login', function(req,res) {
   user.find({'username': req.body.username}, function(err, user) {
@@ -148,6 +154,52 @@ router.get('/movies/:id', function(req,res) {//get a movie
   });
 });
 
+router.get('/movies/:id/:getreviews', function(req,res) {//get a movie
+  CheckToken(req.headers.jwt, function(result) {
+    if(result) {
+      if(req.params.getreviews == 'true') {
+        movie.findById(req.params.id, function(err, movie) {
+          if(err) res.send("Error finding movie - Likely an invalid ID - ERR: " + err);
+          else {
+            if(movie) {
+              GetMovieReviews(req, res, req.params.id, function(result) {
+                if(result.length > 0) {
+                  var returnObj = new Object();
+                  returnObj.movie = movie;
+                  returnObj.reviews = result;
+                  res.send(JSON.stringify(returnObj));
+                }
+                else {
+                  var returnObj = new Object();
+                  returnObj.movie = movie;
+                  returnObj.reviews = "No Reviews Found for this Movie!";
+                  res.send(JSON.stringify(returnObj));
+                }
+              });
+            }
+            else 
+              res.send("No movie found");
+          }
+        });
+      }
+      else {
+        movie.findById(req.params.id, function(err, movie) {
+          if(err) res.send("Error finding movie - Likely an invalid ID - ERR: " + err);
+          else {
+            if(movie)
+              res.send(movie);
+            else 
+              res.send("No movie found");
+          }
+        });
+      }     
+    }
+    else {
+      res.status(401).send("Unauthorized to make this request");
+    }
+  });
+});
+
 router.post('/movies', function(req,res) {//Add movies
   CheckToken(req.headers.jwt, function(result) {
     if(result) {      
@@ -221,6 +273,141 @@ router.delete('/movies/:id', function(req,res) {
         if(err) res.send("Error finding movie - Likely an invalid ID - ERR: " + err);
         else {
           res.send("Movie Deleted!");
+        }
+      });      
+    }
+    else {
+      res.status(401).send("Unauthorized to make this request");
+    }
+  });
+});
+
+//Get review by review ID
+router.get('/review/:id', function(req, res) {
+  CheckToken(req.headers.jwt, function(result) {
+    if(result) {
+      review.findById(req.params.id, function(err, review) {
+        if(err) res.send("Error finding review - Likely an invalid ID - ERR: " + err);
+        else {
+          if(review)
+            res.send(review);
+          else 
+            res.send("No review found");
+        }
+      });      
+    }
+    else {
+      res.status(401).send("Unauthorized to make this request");
+    }
+  });
+});
+
+//Get reviews by movie
+router.get('/movie/reviews/:id', function(req, res) {
+  CheckToken(req.headers.jwt, function(result) {
+    if(result) {
+      GetMovieReviews(req, res, req.params.id, function(result) {
+        res.send(result);
+      });
+    }
+    else {
+      res.status(401).send("Unauthorized to make this request");
+    }
+  });
+});
+
+function GetMovieReviews(req, res, id, finishFunction) {
+  review.find(function(err, reviews) {
+    if(err) res.send("Error finding reviews");
+    else {
+      if(reviews.length > 0) {
+        var returnList = [];
+        for(i = 0; i < reviews.length; i++) {
+          if(reviews[i].movie == id) {
+            returnList.push(reviews[i]);
+          }
+        }
+        if(returnList.length > 0) {
+          return returnList;
+        }
+        else {
+          return "No reviews found for this movie"; 
+        }
+      }            
+      else 
+        return "No reviews found";
+    }
+  });
+}
+
+router.post('/review', function(req, res) {
+  CheckToken(req.headers.jwt, function(result) {
+    if(result) {      
+      movie.findById(req.body.id, function(err, movie) {
+        if(err) res.send("Error finding movie - Likely an invalid ID - ERR: " + err);
+        else {
+          if(movie){
+            var newReview = new review({
+              movie: req.body.id,
+              review: req.body.review
+            });
+            newReview.save(function(err, data){
+              if(err) {
+                res.send(err);
+              }
+              else res.send("Save Success");
+            });
+          }
+          else  {
+            res.send("No movie found to assign this review to!");
+          }
+        }
+      }); 
+    }
+    else {
+      res.status(401).send("Unauthorized to make this request");
+    }
+  });
+
+});
+
+router.put('/review/:id', function(req, res) {
+  CheckToken(req.headers.jwt, function(result) {
+    if(result) {
+      review.findById(req.params.id, function(err, review) {
+        if(err) res.send("Error finding review - Likely an invalid ID - ERR: " + err);
+        else {
+          if(review) {
+            if(req.body.review) {
+              review.review = req.body.review;
+            }
+            review.save(function(error) {
+              if(err) {
+                res.send(error);
+              }
+              else {
+                res.send("Update Success!");
+              }
+            });
+          }
+          else 
+            res.send("No review found");
+        }
+      });      
+    }
+    else {
+      res.status(401).send("Unauthorized to make this request");
+    }
+  });
+});
+
+router.delete('/review/:id', function(req, res) {
+  CheckToken(req.headers.jwt, function(result) {
+    if(result) {
+      review.findByIdAndRemove(req.params.id, function(err) {
+        if(err) res.send("Error finding review - Likely an invalid ID - ERR: " + err);
+        else {
+          res.send("Review Deleted!");
         }
       });      
     }
