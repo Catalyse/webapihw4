@@ -21,6 +21,8 @@
     "nodemon": "^1.13.3",
     "password-hash-and-salt": "^0.1.4",
     "pug": "~2.0.0-beta11",
-    "serve-favicon": "~2.4.2"
+    "serve-favicon": "~2.4.2",
+    "universal-analytics": "^0.4.16",
+    "universal-ga": "^1.2.0"
   }
 }

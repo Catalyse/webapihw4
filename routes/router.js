@@ -4,6 +4,9 @@ var mongoose = require("mongoose");
 var passcrypt = require('password-hash-and-salt');
 var jwt = require('jsonwebtoken');
 var dotenv = require('dotenv').config();
+var analytics = require('universal-analytics'); 
+
+var visitor = analytics('UA-18006016-8');
 
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://catalyse:password123@ds231199.mlab.com:31199/hw4");
@@ -65,11 +68,13 @@ router.post('/login', function(req,res) {
       if(user.length > 0) {
         ValidatePass(req.body.password, user[0].password, function(result) {
           if(result) {
+            visitor.event("Login", "Success").send();
             var userToken = {name: user[0].name, username: user[0].username};
             var token = jwt.sign(userToken, process.env.SECRET_KEY);
             res.json({success: true, token: 'JWT ' + token});
           }
           else {
+            visitor.event("Login", "Failure").send();
             res.send("Invalid Password");
           }
         });
@@ -101,9 +106,11 @@ router.post('/register', function(req,res) {
             });
             newUser.save(function(err, data) {
               if(err) {
+                visitor.event("Register", "Failure").send();
                 res.send("There was an error registering the user!");
               }
               else {
+                visitor.event("Register", "Success").send();
                 res.send("Registration Successful!");
               }
             });
@@ -122,6 +129,7 @@ router.get('/movies/all', function(req, res) {//get all movies
       movie.find(function(err, movies) {
         if(err) res.send("Error finding movies");
         else {
+          visitor.event("Movies", "Get All Movies").send();
           if(movies.length > 0)
             res.send(movies);
           else 
@@ -141,6 +149,8 @@ router.get('/movies/:id', function(req,res) {//get a movie
       movie.findById(req.params.id, function(err, movie) {
         if(err) res.send("Error finding movie - Likely an invalid ID - ERR: " + err);
         else {
+          visitor.event("Movies", "Get Movie By ID").send();
+          visitor.pageview("Movie", req.params.id).send();
           if(movie)
             res.send(movie);
           else 
@@ -162,18 +172,20 @@ router.get('/movies/:id/:getreviews', function(req,res) {//get a movie
           if(err) res.send("Error finding movie - Likely an invalid ID - ERR: " + err);
           else {
             if(movie) {
+              visitor.event("Movies", "Get Movie by ID with review").send();
+              visitor.pageview("Movie", req.params.id).send();
               GetMovieReviews(req, res, req.params.id, function(result) {
                 if(result.length > 0) {
                   var returnObj = new Object();
                   returnObj.movie = movie;
                   returnObj.reviews = result;
-                  res.send(JSON.stringify(returnObj));
+                  res.send(returnObj);
                 }
                 else {
                   var returnObj = new Object();
                   returnObj.movie = movie;
                   returnObj.reviews = "No Reviews Found for this Movie!";
-                  res.send(JSON.stringify(returnObj));
+                  res.send(returnObj);
                 }
               });
             }
@@ -186,6 +198,8 @@ router.get('/movies/:id/:getreviews', function(req,res) {//get a movie
         movie.findById(req.params.id, function(err, movie) {
           if(err) res.send("Error finding movie - Likely an invalid ID - ERR: " + err);
           else {
+            visitor.event("Movies", "Get Movie by ID").send();
+            visitor.pageview("Movie", req.params.id).send();
             if(movie)
               res.send(movie);
             else 
@@ -218,7 +232,10 @@ router.post('/movies', function(req,res) {//Add movies
             res.send(err);
           }
         }
-        else res.send("Save Success");
+        else {
+          res.send("Save Success");
+          visitor.event("Movies", "Added a Movie").send();
+        }
       });
     }
     else {
@@ -251,6 +268,8 @@ router.put('/movies/:id', function(req,res) {//Delete Movies
                 res.send(error);
               }
               else {
+                visitor.event("Movies", "Edited a Movie").send();
+                visitor.pageview("Movie", req.params.id).send();
                 res.send("Update Success!");
               }
             });
@@ -272,6 +291,7 @@ router.delete('/movies/:id', function(req,res) {
       movie.findByIdAndRemove(req.params.id, function(err) {
         if(err) res.send("Error finding movie - Likely an invalid ID - ERR: " + err);
         else {
+          visitor.event("Movies", "Deleted a Movie").send();
           res.send("Movie Deleted!");
         }
       });      
@@ -289,8 +309,11 @@ router.get('/review/:id', function(req, res) {
       review.findById(req.params.id, function(err, review) {
         if(err) res.send("Error finding review - Likely an invalid ID - ERR: " + err);
         else {
-          if(review)
+          if(review) {
+            visitor.event("Reviews", "Viewed a Review").send();
+            visitor.pageview("Review", req.params.id).send();
             res.send(review);
+          }
           else 
             res.send("No review found");
         }
@@ -307,6 +330,7 @@ router.get('/movie/reviews/:id', function(req, res) {
   CheckToken(req.headers.jwt, function(result) {
     if(result) {
       GetMovieReviews(req, res, req.params.id, function(result) {
+        visitor.event("Reviews", "Got reviews for a movie").send();
         res.send(result);
       });
     }
@@ -318,7 +342,7 @@ router.get('/movie/reviews/:id', function(req, res) {
 
 function GetMovieReviews(req, res, id, finishFunction) {
   review.find(function(err, reviews) {
-    if(err) res.send("Error finding reviews");
+    if(err) finishFunction("Error finding reviews");
     else {
       if(reviews.length > 0) {
         var returnList = [];
@@ -328,14 +352,14 @@ function GetMovieReviews(req, res, id, finishFunction) {
           }
         }
         if(returnList.length > 0) {
-          return returnList;
+          finishFunction(returnList);
         }
         else {
-          return "No reviews found for this movie"; 
+          finishFunction("No reviews found for this movie"); 
         }
       }            
       else 
-        return "No reviews found";
+      finishFunction("No reviews found");
     }
   });
 }
@@ -355,7 +379,10 @@ router.post('/review', function(req, res) {
               if(err) {
                 res.send(err);
               }
-              else res.send("Save Success");
+              else {
+                visitor.event("Reviews", "Added a Review").send();
+                res.send("Save Success");
+              }
             });
           }
           else  {
@@ -386,6 +413,8 @@ router.put('/review/:id', function(req, res) {
                 res.send(error);
               }
               else {
+                visitor.event("Reviews", "Edited a Review").send();
+                visitor.pageview("Review", req.params.id).send();
                 res.send("Update Success!");
               }
             });
@@ -407,6 +436,7 @@ router.delete('/review/:id', function(req, res) {
       review.findByIdAndRemove(req.params.id, function(err) {
         if(err) res.send("Error finding review - Likely an invalid ID - ERR: " + err);
         else {
+          visitor.event("Reviews", "Deleted a Review").send();
           res.send("Review Deleted!");
         }
       });      
