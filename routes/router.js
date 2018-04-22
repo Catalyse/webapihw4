@@ -33,6 +33,10 @@ var movieSchema = new mongoose.Schema({
     required: true,
     enum: ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Thriller', 'Western']
   },
+  imageUrl: {
+    type: String,
+    required: false
+  },
   actors: {
     type: [{actorname: {
       type: String,
@@ -160,6 +164,7 @@ router.get('/movies/all/reviews', function(req, res) {//get all movies
                   returnObj[j].genre = movies[j].genre;
                   returnObj[j].releaseyear = movies[j].releaseyear;
                   returnObj[j].title = movies[j].title;
+                  returnObj[j].imageUrl = movies[j].imageUrl;
                   returnObj[j].reviews = [];
                   var foundreviews = false;
                   for(i = 0; i < result.length; i++) {
