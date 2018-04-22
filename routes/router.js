@@ -71,7 +71,7 @@ router.post('/login', function(req,res) {
             visitor.event("Login", "Success").send();
             var userToken = {name: user[0].name, username: user[0].username};
             var token = jwt.sign(userToken, process.env.SECRET_KEY);
-            res.json({success: true, token: 'JWT ' + token});
+            res.json({success: true, token: token});
           }
           else {
             visitor.event("Login", "Failure").send();
