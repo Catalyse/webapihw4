@@ -151,22 +151,32 @@ router.get('/movies/all/reviews', function(req, res) {//get all movies
         else {
           if(movies.length > 0) {
             var returnObj = []
-            for(i = 0; i < movies.length; i++) {
-              GetMovieReviews(req, res, req.params.id, function(result) {
-                if(result.length > 0) {
+            GetMovieReviews(req, res, req.params.id, function(result) {
+              if(result.length > 0) {
+                for(j = 0; j < movies.length; j++) {
                   returnObj[i] = movie;
-                  returnObj[i].reviews = result;
+                  returnObj[i].reviews = [];
+                  var foundreviews = false;
+                  for(i = 0; i < result.length; i++) {
+                    if(result[i].movie == movies[j].id) {
+                      returnObj[i].reviews.push(result[i]);
+                      foundreviews = true;
+                    }
+                  }
+                  if(!foundreviews) {
+                    returnObj[i].reviews.push("No reviews found for this movie!");
+                  }
                 }
-                else {
-                  var returnObj = new Object();
-                  returnObj[i] = movie;
-                  returnObj[i].reviews = "No Reviews Found for this Movie!";
-                }
-                if(i == movies.length - 1) {
-                  res.send(returnObj);
-                }
-              });
-            }
+              }
+              else {
+                var returnObj = new Object();
+                returnObj[i] = movie;
+                returnObj[i].reviews = "No Reviews Found for this Movie!";
+              }
+              if(i == movies.length - 1) {
+                res.send(returnObj);
+              }
+            });
           }
           else 
             res.send("No movie found");
@@ -393,6 +403,19 @@ function GetMovieReviews(req, res, id, finishFunction) {
         else {
           finishFunction("No reviews found for this movie"); 
         }
+      }            
+      else 
+      finishFunction("No reviews found");
+    }
+  });
+}
+
+function GetMoviesReviews(req, res, id, finishFunction) {
+  review.find(function(err, reviews) {
+    if(err) finishFunction("Error finding reviews");
+    else {
+      if(reviews.length > 0) {
+        finishFunction(reviews);
       }            
       else 
       finishFunction("No reviews found");
