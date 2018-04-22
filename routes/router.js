@@ -126,44 +126,50 @@ router.post('/register', function(req,res) {
 router.get('/movies/all', function(req, res) {//get all movies
   CheckToken(req.headers.jwt, function(result) {
     if(result) {
-      if(req.params.reviews == 'true'){
-        movie.find(function(err, movies) {
-          if(err) res.send("Error finding movie - Likely an invalid ID - ERR: " + err);
-          else {
-            if(movies.length > 0) {
-              var returnObj = []
-              for(i = 0; i < movies.length; i++) {
-                GetMovieReviews(req, res, req.params.id, function(result) {
-                  if(result.length > 0) {
-                    returnObj[i] = movie;
-                    returnObj[i].reviews = result;
-                  }
-                  else {
-                    var returnObj = new Object();
-                    returnObj[i] = movie;
-                    returnObj[i].reviews = "No Reviews Found for this Movie!";
-                  }
-                });
-              }
-              res.send(returnObj);
+      movie.find(function(err, movies) {
+        if(err) res.send("Error finding movies");
+        else {
+          visitor.event("Movies", "Get All Movies").send();
+          if(movies.length > 0)
+            res.send(movies);
+          else 
+            res.send("No movies found");
+        }
+      });
+    }
+    else {
+      res.status(401).send("Unauthorized to make this request");
+    }
+  });
+});
+
+router.get('/movies/all/reviews', function(req, res) {//get all movies
+  CheckToken(req.headers.jwt, function(result) {
+    if(result) {
+      movie.find(function(err, movies) {
+        if(err) res.send("Error finding movie - Likely an invalid ID - ERR: " + err);
+        else {
+          if(movies.length > 0) {
+            var returnObj = []
+            for(i = 0; i < movies.length; i++) {
+              GetMovieReviews(req, res, req.params.id, function(result) {
+                if(result.length > 0) {
+                  returnObj[i] = movie;
+                  returnObj[i].reviews = result;
+                }
+                else {
+                  var returnObj = new Object();
+                  returnObj[i] = movie;
+                  returnObj[i].reviews = "No Reviews Found for this Movie!";
+                }
+              });
             }
-            else 
-              res.send("No movie found");
+            res.send(returnObj);
           }
-        });
-      }
-      else {
-        movie.find(function(err, movies) {
-          if(err) res.send("Error finding movies");
-          else {
-            visitor.event("Movies", "Get All Movies").send();
-            if(movies.length > 0)
-              res.send(movies);
-            else 
-              res.send("No movies found");
-          }
-        });
-      }
+          else 
+            res.send("No movie found");
+        }
+      });
     }
     else {
       res.status(401).send("Unauthorized to make this request");
