@@ -167,14 +167,10 @@ router.get('/movies/all/reviews', function(req, res) {//get all movies
                     returnObj[i].reviews.push("No reviews found for this movie!");
                   }
                 }
+                res.send(returnObj);
               }
               else {
-                var returnObj = new Object();
-                returnObj[i] = movie;
-                returnObj[i].reviews = "No Reviews Found for this Movie!";
-              }
-              if(i == movies.length - 1) {
-                res.send(returnObj);
+                res.send("No Movies Found!");
               }
             });
           }
