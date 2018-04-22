@@ -144,27 +144,32 @@ router.get('/movies/all', function(req, res) {//get all movies
 });
 
 router.get('/movies/all/reviews', function(req, res) {//get all movies
-  CheckToken(req.headers.jwt, function(result) {
-    if(result) {
+  //CheckToken(req.headers.jwt, function(result) {
+    //if(result) {
       movie.find(function(err, movies) {
         if(err) res.send("Error finding movie - Likely an invalid ID - ERR: " + err);
         else {
           if(movies.length > 0) {
-            var returnObj = []
-            GetMovieReviews(req, res, req.params.id, function(result) {
+            var returnObj = [];
+            GetMoviesReviews(req, res, req.params.id, function(result) {
               if(result.length > 0) {
                 for(j = 0; j < movies.length; j++) {
-                  returnObj[i] = movie;
-                  returnObj[i].reviews = [];
+                  returnObj[j] = new Object();
+                  returnObj[j].actors = movies[j].actors;
+                  returnObj[j]._id = movies[j].id;
+                  returnObj[j].genre = movies[j].genre;
+                  returnObj[j].releaseyear = movies[j].releaseyear;
+                  returnObj[j].title = movies[j].title;
+                  returnObj[j].reviews = [];
                   var foundreviews = false;
                   for(i = 0; i < result.length; i++) {
                     if(result[i].movie == movies[j].id) {
-                      returnObj[i].reviews.push(result[i]);
+                      returnObj[j].reviews.push(result[i]);
                       foundreviews = true;
                     }
                   }
                   if(!foundreviews) {
-                    returnObj[i].reviews.push("No reviews found for this movie!");
+                    returnObj[j].reviews.push("No reviews found for this movie!");
                   }
                 }
                 res.send(returnObj);
@@ -178,11 +183,11 @@ router.get('/movies/all/reviews', function(req, res) {//get all movies
             res.send("No movie found");
         }
       });
-    }
-    else {
-      res.status(401).send("Unauthorized to make this request");
-    }
-  });
+    //}
+    //else {
+    //  res.status(401).send("Unauthorized to make this request");
+    //}
+  //});
 });
 
 router.get('/movies/:id', function(req,res) {//get a movie
